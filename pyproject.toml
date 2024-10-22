@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "fsm_testing"
+version = "0.1.0"
+description = "TODO"
+authors = ["Bruno_Pinheiro <bopj@softex.cin.ufpe.br>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+transitions = "^0.9.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-cov = "^5.0.0"
+taskipy = "^1.13.0"
+ruff = "^0.6.3"
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+preview = true
+select = ['F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = '.'
+addopts = ['-v']
+testpaths = [
+    'tests',
+]
+
+[tool.taskipy.tasks]
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+test = 'pytest -vv --cov'
+tests_coverage = 'pytest -vv --cov --cov-report=term-missing'
+run = 'python .\src\main.py'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
