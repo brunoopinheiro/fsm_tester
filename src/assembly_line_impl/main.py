@@ -14,7 +14,7 @@ class AssemblyLine:
         {'name': 'PackageProduct', 'on_enter': ['print_state']},
         {'name': 'PerformCalibration', 'on_enter': ['print_state']},
         {'name': 'ReturnToHome', 'on_enter': ['print_state']},
-        {'name': 'Finish', 'on_enter': ['print_state']}
+        {'name': 'Finish', 'on_enter': ['print_state']},
     ]
 
     transitions = [
@@ -95,6 +95,3 @@ if __name__ == '__main__':
     # assembly_line.machine.get_graph().draw('assembly_line.png', prog='dot')
 
 process_machine = AssemblyLine()
-
-# TODO: Tenho que colocar um nome para o processo de forma que eu consiga achar ele rápido
-#  ProcessMachine pode ser um nome genérico
