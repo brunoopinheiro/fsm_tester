@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 transitions = "^0.9.2"
+treelib = "^1.7.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"

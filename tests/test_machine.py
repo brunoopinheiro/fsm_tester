@@ -1,8 +1,15 @@
 import pytest  # noqa
 from unittest.mock import Mock
-from src.testcase import TestCase
+from enum import Enum
+from entities.testcase import TestCase
 from src.assembly_line_impl.main import AssemblyLine
 from typing import List
+
+
+class LibAdapters(Enum):
+    """Enumeration of all available adapters."""
+    TRANSITIONS = 1
+    PYTHON_STATEMACHINE = 2
 
 
 class TestAssemblyLine:

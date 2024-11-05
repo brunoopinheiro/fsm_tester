@@ -283,7 +283,21 @@ six = "*"
 diagrams = ["pygraphviz"]
 test = ["pytest"]
 
+[[package]]
+name = "treelib"
+version = "1.7.0"
+description = "A Python implementation of tree structure."
+optional = false
+python-versions = "*"
+files = [
+    {file = "treelib-1.7.0-py3-none-any.whl", hash = "sha256:c37795eaba19f73f3e1a905ef3f4f0cab660dc7617126e8ae99391e25c755416"},
+    {file = "treelib-1.7.0.tar.gz", hash = "sha256:9bff1af416b9e642a6cd0e0431d15edf26a24b8d0c8ae68afbd3801b5e30fb61"},
+]
+
+[package.dependencies]
+six = "*"
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "78d0ee8b7a94330e103bafc13ed75cdf0bb43f5bbe6a4a17f351e71efdf6a515"
+content-hash = "9d277088a8eec9293cfcbe0d463252c3afa99e0f927582d6b81aac0e9a511b38"
