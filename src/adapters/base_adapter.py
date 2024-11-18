@@ -1,5 +1,10 @@
 from abc import ABC, abstractmethod
-from entities import TestCase, FSMProtocol
+from entities import (
+    FSMProtocol,
+    FSMState,
+    FSMTransition,
+    TestCase,
+)
 from typing import List
 
 
@@ -17,11 +22,11 @@ class BaseAdapter(ABC):
         return is_valid_fsm
 
     @abstractmethod
-    def get_states(self):
+    def get_states(self) -> List[FSMState]:
         raise NotImplementedError
 
     @abstractmethod
-    def get_transitions(self):
+    def get_transitions(self) -> List[FSMTransition]:
         raise NotImplementedError
 
     @abstractmethod
