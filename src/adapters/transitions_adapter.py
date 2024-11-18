@@ -12,6 +12,15 @@ from typing import List
 
 class TransitionsAdapter(BaseAdapter):
 
+    def __init__(self, fsm):
+        super().__init__(fsm)
+        self.__initial_state = self.fsm.machine.initial
+
+    @property
+    def initial_state(self) -> str:
+        # documentation provided by base_adapter.py
+        return self.__initial_state
+
     def get_test_cases(self):
         # documentation provided by base_adapter.py
         transitions = self.fsm.transitions

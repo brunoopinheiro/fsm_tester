@@ -29,6 +29,16 @@ class BaseAdapter(ABC):
         is_valid_fsm = has_states and has_transitions
         return is_valid_fsm
 
+    @property
+    @abstractmethod
+    def initial_state(self) -> str:
+        """Returns the initial state of the FSM.
+
+        Returns:
+            str: The name for the initial state of the FSM.
+        """
+        raise NotImplementedError
+
     @abstractmethod
     def get_states(self) -> List[FSMState]:
         """Returns the states of the FSM.
