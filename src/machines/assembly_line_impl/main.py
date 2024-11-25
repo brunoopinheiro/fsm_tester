@@ -15,7 +15,6 @@ class AssemblyLine:
         {'name': 'PerformCalibration', 'on_enter': ['print_state']},
         {'name': 'ReturnToHome', 'on_enter': ['print_state']},
         {'name': 'Finish', 'on_enter': ['print_state']},
-        {'name': 'NotUsed', 'on_enter': ['print_state']},
     ]
 
     transitions = [
