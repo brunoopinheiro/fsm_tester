@@ -7,6 +7,7 @@ from adapters.base_adapter import (
 )
 import networkx as nx
 from tempfile import NamedTemporaryFile
+from transitions import State
 from typing import List
 
 
@@ -50,6 +51,14 @@ class TransitionsAdapter(BaseAdapter):
         states = self.fsm.states
         fsm_states = []
         for state in states:
+            if isinstance(state, str):
+                state = {'name': state}
+            if isinstance(state, State):
+                state = {
+                    'name': state.name,
+                    'on_enter': state.on_enter,
+                    'on_exit': state.on_exit,
+                }
             name = state['name']
             on_enter = state.get('on_enter', None)
             on_exit = state.get('on_exit', None)

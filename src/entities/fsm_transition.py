@@ -23,3 +23,10 @@ class FSMTransition:
 
     def __repr__(self):
         return self.name
+
+    def __eq__(self, value):
+        if isinstance(value, FSMTransition):
+            return (self.name == value.name
+                    and self.source == value.source
+                    and self.destination == value.destination)
+        return False
