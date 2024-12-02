@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
-from entities import (
+from src.entities import (
     FSMProtocol,
     FSMState,
     FSMTransition,
     TestCase,
 )
-from typing import List
+from typing import List, Union
+from networkx import MultiDiGraph, MultiGraph
 
 
 class BaseAdapter(ABC):
@@ -85,5 +86,14 @@ class BaseAdapter(ABC):
         Returns:
             set: The attributes that are not part of the FSM but are used in
             the FSM behavior.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_graph(self) -> Union[MultiGraph, MultiDiGraph]:
+        """Returns the graph representation of the FSM.
+
+        Returns:
+            DiGraph: The graph representation of the FSM.
         """
         raise NotImplementedError

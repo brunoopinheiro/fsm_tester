@@ -1,5 +1,5 @@
 # https://networkx.org/documentation/stable/
-from adapters.base_adapter import (
+from src.adapters.base_adapter import (
     BaseAdapter,
     FSMState,
     FSMTransition,
@@ -165,7 +165,7 @@ class TransitionsAdapter(BaseAdapter):
                 stolen_methods.add(attribute)
         return stolen_methods
 
-    def get_tree(self):
+    def get_graph(self):
         # TODO: alterar dotfile com conditions etc
         with NamedTemporaryFile(mode='wt', delete_on_close=False) as fp:
             fp.write(self.fsm.get_graph().source)

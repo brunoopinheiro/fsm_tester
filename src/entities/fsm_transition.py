@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from entities import FSMState
+from src.entities import FSMState
 from typing import Optional, List, Union
 
 
