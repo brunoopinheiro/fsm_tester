@@ -8,12 +8,17 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 transitions = "^0.9.2"
+networkx = "^3.4.2"
+graphviz = "^0.20.3"
+pydot = "^3.0.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
 pytest-cov = "^5.0.0"
 taskipy = "^1.13.0"
 ruff = "^0.6.3"
+ipykernel = "^6.29.5"
+matplotlib = "^3.9.2"
 
 [tool.ruff]
 line-length = 79

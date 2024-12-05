@@ -51,7 +51,8 @@ class AssemblyLine:
         self.state_execution_sequence = []
 
         self.machine = GraphMachine(model=self, states=AssemblyLine.states,
-                                    transitions=AssemblyLine.transitions, initial='Initial')
+                                    transitions=AssemblyLine.transitions,
+                                    initial='Initial', graph_engine='graphviz')
 
     def print_state(self):
         print('Estado atual: ' + self.state + '\n')
