@@ -1,6 +1,6 @@
 import networkx as nx
 
-from entities import FSMTransition
+from src.entities import FSMTransition
 from networkx import MultiDiGraph, MultiGraph
 from unittest import TestSuite, TestCase
 from typing import Union, List
@@ -42,7 +42,7 @@ class GraphAnalyzer:
                         self.graph,
                         source=self.initial_state,
                         target=state,
-                    )
+                    ), f'{state} is unreachable.'
             return assert_function
 
         testsuite = TestSuite()
@@ -99,7 +99,7 @@ class GraphAnalyzer:
                     )
                     if not has_escape:
                         escape_path.append(s_state)
-                assert not is_endstate or not has_successors or escape_path
+                assert not is_endstate or not has_successors or escape_path, f'{state} is a sink state.'  # noqa
             return assert_function
 
         testsuite = TestSuite()
@@ -122,6 +122,7 @@ class GraphAnalyzer:
             )
             testcase._class_cleanups = list()
             testsuite.addTest(testcase)
+        return testsuite
 
     def nondeterministic_transition_suite(
         self,

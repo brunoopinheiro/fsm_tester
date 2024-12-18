@@ -65,7 +65,9 @@ class FSMTester():
         self.suites.append(self.graph_analyzer.unreachable_states_suite())
         self.suites.append(self.graph_analyzer.sink_states_suite())
         self.suites.append(
-            self.graph_analyzer.nondeterministic_transition_suite()
+            self.graph_analyzer.nondeterministic_transition_suite(
+                transitions=self.adapter.get_transitions(),
+            )
         )
         self.exit = True
 
