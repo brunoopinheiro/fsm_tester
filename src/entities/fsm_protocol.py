@@ -10,3 +10,7 @@ class FSMProtocol(Protocol):
 
     @property
     def transitions(self) -> List[Dict[str, str]]: ...
+
+    # TODO: This is a placeholder. Needs to be better structured.
+    def __subclasscheck__(self, subclass):
+        return super().__subclasscheck__(subclass)
