@@ -1,45 +1,13 @@
 from unittest.runner import TextTestRunner
 from src.adapters import (
-    BaseAdapter,
-    TransitionsAdapter,
+    AdapterFactory,
 )
 from src.entities import FSMProtocol
 from src.components.graph_analyzer import GraphAnalyzer
-from typing import Literal
-
-
-DIALECTS = Literal['pytransitions', 'python-statemachine']
+from src.typing import DIALECTS
 
 
 class FSMTester():
-
-    def __initiate_adapter(
-        self,
-        fsm_module: FSMProtocol,
-        dialect: DIALECTS,
-    ) -> BaseAdapter:
-        """With the given FSM module and dialect, return the appropriate
-        adapter that will be used to interpret the FSM module.
-
-        Args:
-            fsm_module (FSMProtocol): The FSM Module implementation under test.
-            dialect (DIALECTS): The dialect of the FSM module.
-
-        Raises:
-            NotImplementedError: For State Machine implementations not yet
-                implemented.
-            ValueError: For dialects not recognized.
-
-        Returns:
-            BaseAdapter: The adapter that will be used to interpret the FSM
-        """
-        if dialect == 'pytransitions':
-            return TransitionsAdapter(fsm_module)
-        elif dialect == 'python-statemachine':
-            raise NotImplementedError(
-                'Python State Machine not implemented yet.')
-        else:
-            raise ValueError('Dialect not recognized.')
 
     def __init__(
         self,
@@ -50,7 +18,7 @@ class FSMTester():
         *args,
         **kwargs,
     ) -> None:
-        self.adapter = self.__initiate_adapter(fsm_module, dialect)
+        self.adapter = AdapterFactory.create_adapter(fsm_module, dialect)
         self.final_state = final_state
         self.graph = self.adapter.get_graph()
         self.test_runner = TextTestRunner(
