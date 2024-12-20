@@ -40,6 +40,13 @@ class BaseAdapter(ABC):
         """
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def state_attr(self) -> str:
+        """Returns the internal reference that holds the current state of the
+        machine."""
+        raise NotImplementedError
+
     @abstractmethod
     def get_states(self) -> List[FSMState]:
         """Returns the states of the FSM.
@@ -55,6 +62,19 @@ class BaseAdapter(ABC):
 
         Returns:
             List[FSMTransition]: The transitions of the FSM.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_transition(self, source: str, dest: str) -> FSMTransition:
+        """Returns the transition from source to dest.
+
+        Args:
+            source (str): The source state of the transition.
+            dest (str): The destination state of the transition.
+
+        Returns:
+            FSMTransition: The transition from source to dest.
         """
         raise NotImplementedError
 
@@ -79,9 +99,13 @@ class BaseAdapter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def mimic_attributes(self) -> set:
+    def mimic_attributes(self, callback: callable) -> set:
         """Reading the FSM implementation, returns the attributes that are not
         part of the FSM but are used in the FSM behavior.
+
+        Args:
+            callback (callable): The callback to use to insert the attributes
+                in the parent class.
 
         Returns:
             set: The attributes that are not part of the FSM but are used in
@@ -95,5 +119,17 @@ class BaseAdapter(ABC):
 
         Returns:
             DiGraph: The graph representation of the FSM.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_transition_function(self, transition: FSMTransition) -> callable:
+        """Returns the transition function for the given transition.
+
+        Args:
+            transition (FSMTransition): The transition to get the function for.
+
+        Returns:
+            callable: The transition function.
         """
         raise NotImplementedError

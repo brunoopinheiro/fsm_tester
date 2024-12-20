@@ -1,9 +1,11 @@
 from unittest.runner import TextTestRunner
+from unittest.case import TestCase
 from src.adapters import (
     AdapterFactory,
 )
 from src.entities import FSMProtocol
 from src.components.graph_analyzer import GraphAnalyzer
+from src.components.machine_mocker import MachineMocker
 from src.typing import DIALECTS
 
 
@@ -29,6 +31,9 @@ class FSMTester():
             initial_state=self.adapter.initial_state,
             final_state=self.final_state,
         )
+        self.machine_mocker = MachineMocker(
+            adapter=self.adapter,
+        )
         self.suites = list()
         self.suites.append(self.graph_analyzer.unreachable_states_suite())
         self.suites.append(self.graph_analyzer.sink_states_suite())
@@ -36,6 +41,10 @@ class FSMTester():
             self.graph_analyzer.nondeterministic_transition_suite(
                 transitions=self.adapter.get_transitions(),
             )
+        )
+        # maybe this part should be executed only if the graph tests pass
+        self.suites.append(
+            self.machine_mocker.unreachable_states_suite(),
         )
         self.exit = True
 
@@ -53,6 +62,7 @@ class FSMTester():
             suite_results = list()
             failures = list()
             for test in suite:
+                test: TestCase
                 self.test = test
                 result = self.test_runner.run(test)
                 is_successful = result.wasSuccessful()

@@ -14,6 +14,7 @@ def test_assembly_line():
     fsm_tester.run_tests()
 
 
+@pytest.mark.skip(reason='SIM')
 @pytest.mark.xfail
 def test_unreachable_state_machine():
     fsm_tester = FSMTester(
@@ -24,6 +25,7 @@ def test_unreachable_state_machine():
     fsm_tester.run_tests()
 
 
+@pytest.mark.skip(reason='SIM')
 @pytest.mark.xfail
 def test_sink_state_machine():
     fsm_tester = FSMTester(

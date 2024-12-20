@@ -1,3 +1,6 @@
-from src.typing.types import DIALECTS
+from src.typing.types import (
+    Adapter,
+    DIALECTS,
+)
 
-__all__ = ['DIALECTS']
+__all__ = ['Adapter', 'DIALECTS']

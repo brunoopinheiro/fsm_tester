@@ -5,6 +5,9 @@ from src.typing import DIALECTS
 
 
 class AdapterFactory:
+    """Factory class for creating the appropriate adapter for the given FSM
+    module and dialect.
+    """
 
     @staticmethod
     def create_adapter(
