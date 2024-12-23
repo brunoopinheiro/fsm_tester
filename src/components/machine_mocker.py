@@ -114,6 +114,12 @@ class MachineMocker:
                 #     func()
 
             def assert_function(*args, **kwargs):
+                """Assert that the given path is reachable. This function will
+                reset the FSM, then execute each of the transitions in the
+                path, asserting that the state attribute of the machine is the
+                expected state after each transition.
+                """
+                self.adapter.reset_fsm()
                 for i in range(len(path) - 1):
                     source = path[i]
                     dest = path[i + 1]
@@ -126,7 +132,7 @@ class MachineMocker:
                     assert getattr(
                         self.adapter.fsm,
                         self.adapter.state_attr,
-                    ) == dest
+                    ) == dest, f'Machine should have been in state {dest}, but is in state {getattr(self.adapter.fsm, self.adapter.state_attr)}'  # noqa
 
             return assert_function
 
@@ -146,7 +152,6 @@ class MachineMocker:
                                         if len(path) > 1]):
                 testcase_name = f'test_transition_{idx}_to_{state}'
                 _callable = test_path(path)
-                self.adapter.reset_fsm()  # TODO: Implement this method
                 _callable.__name__ = testcase_name
                 setattr(
                     TestCase,

@@ -133,3 +133,8 @@ class BaseAdapter(ABC):
             callable: The transition function.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def reset_fsm(self) -> None:
+        """Resets the FSM to the initial state."""
+        raise NotImplementedError

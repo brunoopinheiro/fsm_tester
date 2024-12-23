@@ -157,7 +157,8 @@ class TransitionsAdapter(BaseAdapter):
         return state_methods.union(transition_methods)
 
     def __runtime_evaluators(self, runtime_methods: set):
-        model_logic = [state.get('name', None)
+        model_logic = [state
+                       if isinstance(state, str) else state.get('name', None)
                        for state in self.fsm.states]
         for method in model_logic:
             runtime_methods.add(f'is_{method}')
@@ -194,7 +195,7 @@ class TransitionsAdapter(BaseAdapter):
         return stolen_methods
 
     def get_graph(self):
-        # TODO: alterar dotfile com conditions etc
+        # TODO: alter dotfile with conditions and logic
         with NamedTemporaryFile(mode='wt', delete_on_close=False) as fp:
             fp.write(self.fsm.get_graph().source)
             fp.close()
@@ -214,3 +215,8 @@ class TransitionsAdapter(BaseAdapter):
         if t_func is None:
             raise AttributeError(f"Transition function {trigger} not found")
         return t_func
+
+    def reset_fsm(self):
+        # documentation provided by base_adapter.py
+        self.fsm.state = self.initial_state
+        return self.fsm
