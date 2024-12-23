@@ -1,45 +1,15 @@
 from unittest.runner import TextTestRunner
+from unittest.case import TestCase
 from src.adapters import (
-    BaseAdapter,
-    TransitionsAdapter,
+    AdapterFactory,
 )
 from src.entities import FSMProtocol
 from src.components.graph_analyzer import GraphAnalyzer
-from typing import Literal
-
-
-DIALECTS = Literal['pytransitions', 'python-statemachine']
+from src.components.machine_mocker import MachineMocker
+from src.typing import DIALECTS
 
 
 class FSMTester():
-
-    def __initiate_adapter(
-        self,
-        fsm_module: FSMProtocol,
-        dialect: DIALECTS,
-    ) -> BaseAdapter:
-        """With the given FSM module and dialect, return the appropriate
-        adapter that will be used to interpret the FSM module.
-
-        Args:
-            fsm_module (FSMProtocol): The FSM Module implementation under test.
-            dialect (DIALECTS): The dialect of the FSM module.
-
-        Raises:
-            NotImplementedError: For State Machine implementations not yet
-                implemented.
-            ValueError: For dialects not recognized.
-
-        Returns:
-            BaseAdapter: The adapter that will be used to interpret the FSM
-        """
-        if dialect == 'pytransitions':
-            return TransitionsAdapter(fsm_module)
-        elif dialect == 'python-statemachine':
-            raise NotImplementedError(
-                'Python State Machine not implemented yet.')
-        else:
-            raise ValueError('Dialect not recognized.')
 
     def __init__(
         self,
@@ -50,7 +20,7 @@ class FSMTester():
         *args,
         **kwargs,
     ) -> None:
-        self.adapter = self.__initiate_adapter(fsm_module, dialect)
+        self.adapter = AdapterFactory.create_adapter(fsm_module, dialect)
         self.final_state = final_state
         self.graph = self.adapter.get_graph()
         self.test_runner = TextTestRunner(
@@ -61,6 +31,9 @@ class FSMTester():
             initial_state=self.adapter.initial_state,
             final_state=self.final_state,
         )
+        self.machine_mocker = MachineMocker(
+            adapter=self.adapter,
+        )
         self.suites = list()
         self.suites.append(self.graph_analyzer.unreachable_states_suite())
         self.suites.append(self.graph_analyzer.sink_states_suite())
@@ -68,6 +41,10 @@ class FSMTester():
             self.graph_analyzer.nondeterministic_transition_suite(
                 transitions=self.adapter.get_transitions(),
             )
+        )
+        # maybe this part should be executed only if the graph tests pass
+        self.suites.append(
+            self.machine_mocker.unreachable_states_suite(),
         )
         self.exit = True
 
@@ -85,6 +62,7 @@ class FSMTester():
             suite_results = list()
             failures = list()
             for test in suite:
+                test: TestCase
                 self.test = test
                 result = self.test_runner.run(test)
                 is_successful = result.wasSuccessful()

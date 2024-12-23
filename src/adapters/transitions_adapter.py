@@ -22,6 +22,11 @@ class TransitionsAdapter(BaseAdapter):
         # documentation provided by base_adapter.py
         return self.__initial_state
 
+    @property
+    def state_attr(self) -> str:
+        # documentation provided by base_adapter.py
+        return 'state'
+
     def get_test_cases(self):
         # documentation provided by base_adapter.py
         transitions = self.fsm.transitions
@@ -71,20 +76,26 @@ class TransitionsAdapter(BaseAdapter):
             fsm_states.append(fsm_state)
         return fsm_states
 
-    def get_transitions(self):
-        # documentation provided by base_adapter.py
-        transitions = self.fsm.transitions
-        fsm_transitions = []
-        for tr in transitions:
-            name = tr['trigger']
-            source = tr['source']
-            dest = tr['dest']
-            conditions = tr.get('conditions', None)
-            unless = tr.get('unless', None)
-            before = tr.get('before', None)
-            after = tr.get('after', None)
+    def create_fsm_transition(self, transition_dict: dict) -> FSMTransition:
+        """Create a FSMTransition object from a `pytransitions` dictionary
+        representing a transition.
 
-            fsm_transition = FSMTransition(
+        Args:
+            transition_dict (dict): A dictionary representing a transition,
+                following the `pytransitions` format.
+
+        Returns:
+            FSMTransition: A FSMTransition object.
+        """
+        name = transition_dict['trigger']
+        source = transition_dict['source']
+        dest = transition_dict['dest']
+        conditions = transition_dict.get('conditions', None)
+        unless = transition_dict.get('unless', None)
+        before = transition_dict.get('before', None)
+        after = transition_dict.get('after', None)
+
+        fsm_transition = FSMTransition(
                 name=name,
                 source=source,
                 destination=dest,
@@ -93,8 +104,25 @@ class TransitionsAdapter(BaseAdapter):
                 before=before,
                 after=after,
             )
+
+        return fsm_transition
+
+    def get_transitions(self):
+        # documentation provided by base_adapter.py
+        transitions = self.fsm.transitions
+        fsm_transitions = []
+        for tr in transitions:
+            fsm_transition = self.create_fsm_transition(tr)
             fsm_transitions.append(fsm_transition)
         return fsm_transitions
+
+    def get_transition(self, source: str, dest: str) -> FSMTransition:
+        # documentation provided by base_adapter.py
+        transitions = self.fsm.transitions
+        for tr in transitions:
+            if tr['source'] == source and tr['dest'] == dest:
+                fsm_transition = self.create_fsm_transition(tr)
+                return fsm_transition
 
     def __get_state_methods(self):
         state_methods = set()
@@ -129,7 +157,8 @@ class TransitionsAdapter(BaseAdapter):
         return state_methods.union(transition_methods)
 
     def __runtime_evaluators(self, runtime_methods: set):
-        model_logic = [state.get('name', None)
+        model_logic = [state
+                       if isinstance(state, str) else state.get('name', None)
                        for state in self.fsm.states]
         for method in model_logic:
             runtime_methods.add(f'is_{method}')
@@ -151,7 +180,7 @@ class TransitionsAdapter(BaseAdapter):
         runtime_methods.add('may_trigger')
         return runtime_methods
 
-    def mimic_attributes(self) -> set:
+    def mimic_attributes(self, callback: callable) -> set:
         # documentation provided by base_adapter.py
         stolen_methods = set()
         runtime_methods = self.__transitions_runtime_methods()
@@ -161,15 +190,33 @@ class TransitionsAdapter(BaseAdapter):
             not_runtime_methods = attribute not in runtime_methods
             condition = (not_magic and not_runtime_methods)
             if condition:
-                setattr(self, attribute, getattr(self.fsm, attribute))
+                callback(attribute, getattr(self.fsm, attribute))
                 stolen_methods.add(attribute)
         return stolen_methods
 
     def get_graph(self):
-        # TODO: alterar dotfile com conditions etc
+        # TODO: alter dotfile with conditions and logic
         with NamedTemporaryFile(mode='wt', delete_on_close=False) as fp:
             fp.write(self.fsm.get_graph().source)
             fp.close()
 
             graph = nx.drawing.nx_pydot.read_dot(fp.name)
         return graph
+
+    def get_transition_function(self, transition: FSMTransition) -> callable:
+        # documentation provided by base_adapter.py
+        # naive implementation
+        trigger = transition.name
+        t_func = None
+        if hasattr(self.fsm, trigger):
+            t_func = getattr(self.fsm, trigger)
+        elif hasattr(self, 'model') and hasattr(self.model, trigger):
+            t_func = getattr(self.model, trigger)
+        if t_func is None:
+            raise AttributeError(f"Transition function {trigger} not found")
+        return t_func
+
+    def reset_fsm(self):
+        # documentation provided by base_adapter.py
+        self.fsm.state = self.initial_state
+        return self.fsm
