@@ -85,7 +85,7 @@ class MachineMocker:
                 )
 
                 def callback(condition, mock):
-                    setattr(self, condition, mock)
+                    setattr(self.adapter.fsm, condition, mock)
 
                 # for before in transition.before:
                 #     func = getattr(
@@ -120,6 +120,7 @@ class MachineMocker:
                 expected state after each transition.
                 """
                 self.adapter.reset_fsm()
+                print(path)
                 for i in range(len(path) - 1):
                     source = path[i]
                     dest = path[i + 1]
