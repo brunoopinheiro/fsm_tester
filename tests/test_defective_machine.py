@@ -1,16 +1,22 @@
 import pytest  # noqa
-from machines.assembly_line_impl.main import AssemblyLine
+from machines.defective.sink import SimpleMachineWithSinkState
 from src.fsm_tester import FSMTester
 
 
 @pytest.fixture
 def fsm_tester():
     return FSMTester(
-        AssemblyLine,
+        SimpleMachineWithSinkState,
         dialect='pytransitions',
         final_state='Finish',
-        expected_loops=3,
+        expected_loops=1,
     )
+
+
+# @pytest.mark.xfail
+def test_deadlock_states_suite(fsm_tester):
+    suite = fsm_tester.deadlock_states_suite
+    fsm_tester.run(suite)
 
 
 def test_unreachable_states_suite(fsm_tester):
@@ -30,9 +36,4 @@ def test_nondeterministic_transition_suite(fsm_tester):
 
 def test_machine_execution_suite(fsm_tester):
     suite = fsm_tester.machine_execution_suite
-    fsm_tester.run(suite)
-
-
-def test_deadlock_states_suite(fsm_tester):
-    suite = fsm_tester.deadlock_states_suite
     fsm_tester.run(suite)
