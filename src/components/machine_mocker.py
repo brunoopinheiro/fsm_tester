@@ -46,7 +46,7 @@ class MachineMocker:
         self,
         source: str,
         dest: str,
-    ) -> None:
+    ) -> str:
         """Execute a transition from source to dest. This function
         shall execute each of the `before` functions in the transition
         definition, then mock the `conditions` and `unless` functions
@@ -58,6 +58,9 @@ class MachineMocker:
             source (str): The source state of the transition.
             dest (str): The destination state of the transition.
             adapter (Adapter): The adapter for the FSM.
+
+        Returns:
+            str: The name of the transition function that was executed.
         """
         transition = self.adapter.get_transition(source, dest)
         transition_function_ref = self.adapter.get_transition_function(
@@ -92,6 +95,7 @@ class MachineMocker:
         #         after,
         #     )
         #     func()
+        return transition.name
 
     def unreachable_states_suite(self) -> TestSuite:
         """Generate test cases to check if there are unreachable states in the
@@ -124,18 +128,23 @@ class MachineMocker:
                 expected state after each transition.
                 """
                 self.adapter.reset_fsm()
+                traceback = list()
                 for i in range(len(path) - 1):
                     source = path[i]
                     dest = path[i + 1]
                     # execute transition
-                    self.execute_transition(
+                    t_name = self.execute_transition(
                         source=source,
                         dest=dest,
                     )
+                    traceback.append(t_name)
+                    errormsg = f'''Machine should have been in state {dest},
+                                but is in state {getattr(self.adapter.fsm, self.adapter.state_attr)}
+                                after executing {t_name}. \n Traceback: {traceback}'''  # noqa
                     assert getattr(
                         self.adapter.fsm,
                         self.adapter.state_attr,
-                    ) == dest, f'Machine should have been in state {dest}, but is in state {getattr(self.adapter.fsm, self.adapter.state_attr)}'  # noqa
+                    ) == dest, errormsg
 
             return assert_function
 
