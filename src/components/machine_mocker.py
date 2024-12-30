@@ -206,6 +206,7 @@ class MachineMocker:
         Returns:
             List[str]: The escape path from the loop.
         """
+        # TODO: Try to find scape paths from each state in the loop
         try:
             paths = nx.shortest_path(
                 self.graph,

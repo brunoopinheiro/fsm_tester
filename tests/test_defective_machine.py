@@ -1,19 +1,19 @@
 import pytest  # noqa
-from machines.defective.sink import SimpleMachineWithSinkState
+from machines.defective.deadlock import DeadlockMachine
 from src.fsm_tester import FSMTester
 
 
 @pytest.fixture
 def fsm_tester():
     return FSMTester(
-        SimpleMachineWithSinkState,
+        DeadlockMachine,
         dialect='pytransitions',
         final_state='Finish',
         expected_loops=1,
     )
 
 
-# @pytest.mark.xfail
+@pytest.mark.xfail
 def test_deadlock_states_suite(fsm_tester):
     suite = fsm_tester.deadlock_states_suite
     fsm_tester.run(suite)

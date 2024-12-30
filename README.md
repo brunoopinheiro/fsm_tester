@@ -1,6 +1,5 @@
 # TODO
 - [ ] FSMProtocol
-- [ ] Better Test Output Messages
 
 
 # Notes

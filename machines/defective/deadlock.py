@@ -1,7 +1,7 @@
 from transitions.extensions import GraphMachine
 
 
-class SimpleMachineWithSinkState:
+class DeadlockMachine:
     states = ['A', 'B', 'C', 'D', 'E', 'F', 'Finish']
 
     transitions = [
@@ -17,8 +17,8 @@ class SimpleMachineWithSinkState:
     def __init__(self):
         self.machine = GraphMachine(
             model=self,
-            states=SimpleMachineWithSinkState.states,
-            transitions=SimpleMachineWithSinkState.transitions,
+            states=DeadlockMachine.states,
+            transitions=DeadlockMachine.transitions,
             initial='A',
         )
         self.defective = False
