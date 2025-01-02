@@ -296,7 +296,7 @@ class MachineMocker:
                 escape_path = self._find_escape_path(
                     loop[-0],
                 )
-                if len(escape_path) == 0:
+                if escape_path is None or len(escape_path) == 0:
                     assert False, f'Deadlock Detected in loop {loop}'
                 execute_path(path_to_loop)
                 for exec_n in range(self.expected_loops):
