@@ -30,6 +30,10 @@ class FSMTester():
         *args,
         **kwargs,
     ) -> None:
+        if not isinstance(fsm_module, FSMProtocol):
+            raise TypeError(
+                'The FSM Module must implement the FSMProtocol.'
+            )
         self.adapter = AdapterFactory.create_adapter(fsm_module, dialect)
         self.final_state = final_state
         self.graph = self.adapter.get_graph()

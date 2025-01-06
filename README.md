@@ -1,7 +1,3 @@
-# TODO
-- [ ] FSMProtocol
-
-
 # Notes
 - https://networkx.org/documentation/stable/
     - Used to get the graph representation of the state machine
