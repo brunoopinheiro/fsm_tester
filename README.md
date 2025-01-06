@@ -37,7 +37,7 @@ def test_assembly_line(fsm_tester, suite):
 The tool was already developed using Poetry to ease the package management, but the installation process is not yet automated. The tool is not yet available on PyPi, so you need to clone the repository and install the dependencies manually.
 
 ## Supported Dialects
-Currently, the tool supports supports only the (`pytransitions`)[] library, but the tool is designed to be easily extensible to other libraries. If you want to add support for a new library, you can create a class that inherits from the `BaseAdapter` class and implement the methods that are necessary to convert the FSM Model to the desired library, then add this support to the `create_adapter` method in the `AdapterFactory` class.
+Currently, the tool supports supports only the [`pytransitions`](https://github.com/pytransitions/transitions) library, but the tool is designed to be easily extensible to other libraries. If you want to add support for a new library, you can create a class that inherits from the `BaseAdapter` class and implement the methods that are necessary to convert the FSM Model to the desired library, then add this support to the `create_adapter` method in the `AdapterFactory` class.
 
 ## Analysis
 The tool uses an hybrid approach to analyze the FSM Model. It uses the NetworkX library to create a graph representation of the FSM Model, and then uses the graph to analyze the properties of the FSM Model.
