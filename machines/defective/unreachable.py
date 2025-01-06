@@ -1,83 +1,68 @@
-# Building a defective Machine
 from transitions.extensions import GraphMachine
 
 
-class AssemblyLineUnreachable:
+class UnreachableMachine:
     states = [
-        {'name': 'Initial', 'on_enter': ['print_state']},
-        {'name': 'WaitOp', 'on_enter': ['print_state']},
-        {'name': 'PickComponent', 'on_enter': ['print_state']},
-        {'name': 'InspectComponent', 'on_enter': ['print_state']},
-        {'name': 'DiscardComponent', 'on_enter': ['print_state', 'count_discarded_components']},  # noqa
-        {'name': 'PlaceComponent', 'on_enter': ['print_state']},
-        {'name': 'AssembleProduct', 'on_enter': ['print_state']},
-        {'name': 'VerifyAssembly', 'on_enter': ['print_state']},
-        {'name': 'PackageProduct', 'on_enter': ['print_state']},
-        {'name': 'PerformCalibration', 'on_enter': ['print_state']},
-        {'name': 'ReturnToHome', 'on_enter': ['print_state']},
-        {'name': 'Finish', 'on_enter': ['print_state']},
-        {'name': 'NotUsed', 'on_enter': ['print_state']},
+        {'name': 'Start', 'on_enter': ['print_state']},
+        {'name': 'Idle', 'on_enter': ['print_state']},
+        {'name': 'SelectPart', 'on_enter': ['print_state']},
+        {'name': 'CheckPart', 'on_enter': ['print_state']},
+        {'name': 'RejectPart', 'on_enter': ['print_state', 'count_rejected_parts']},  # noqa
+        {'name': 'PlacePart', 'on_enter': ['print_state']},
+        {'name': 'BuildProduct', 'on_enter': ['print_state']},
+        {'name': 'Unused', 'on_enter': ['print_state']},
+        {'name': 'InspectBuild', 'on_enter': ['print_state']},
+        {'name': 'BoxProduct', 'on_enter': ['print_state']},
+        {'name': 'Calibrate', 'on_enter': ['print_state']},
+        {'name': 'ReturnHome', 'on_enter': ['print_state']},
+        {'name': 'Complete', 'on_enter': ['print_state']},
     ]
 
     transitions = [
-        {'trigger': 'initializing', 'source': 'Initial', 'dest': 'WaitOp'},
-        {'trigger': 'receive_command', 'source': 'WaitOp', 'dest': 'PickComponent'},  # noqa
-        {'trigger': 'component_picked', 'source': 'PickComponent', 'dest': 'InspectComponent'},  # noqa
+        {'trigger': 'start', 'source': 'Start', 'dest': 'Idle'},
+        {'trigger': 'command_received', 'source': 'Idle', 'dest': 'SelectPart'},  # noqa
+        {'trigger': 'part_selected', 'source': 'SelectPart', 'dest': 'CheckPart'},  # noqa
 
-        {'trigger': 'inspected_component', 'source': 'InspectComponent', 'dest': 'PlaceComponent',  # noqa
-         'unless': ['is_bad_component']},
-        {'trigger': 'inspected_component', 'source': 'InspectComponent', 'dest': 'DiscardComponent',  # noqa
-         'conditions': ['is_bad_component']},
+        {'trigger': 'part_checked', 'source': 'CheckPart', 'dest': 'PlacePart',  # noqa
+         'unless': ['is_defective_part']},
+        {'trigger': 'part_checked', 'source': 'CheckPart', 'dest': 'RejectPart',  # noqa
+         'conditions': ['is_defective_part']},
 
-        {'trigger': 'component_placed', 'source': 'PlaceComponent', 'dest': 'AssembleProduct'},  # noqa
-        {'trigger': 'assembled_product', 'source': 'AssembleProduct', 'dest': 'VerifyAssembly'},  # noqa
-        {'trigger': 'verified_assembly', 'source': 'VerifyAssembly', 'dest': 'PackageProduct'},  # noqa
+        {'trigger': 'part_placed', 'source': 'PlacePart', 'dest': 'BuildProduct'},  # noqa
+        {'trigger': 'product_built', 'source': 'BuildProduct', 'dest': 'InspectBuild'},  # noqa
+        {'trigger': 'build_inspected', 'source': 'InspectBuild', 'dest': 'BoxProduct'},  # noqa
 
-        {'trigger': 'discarded_component', 'source': 'DiscardComponent', 'dest': 'ReturnToHome'},  # noqa
+        {'trigger': 'part_rejected', 'source': 'RejectPart', 'dest': 'ReturnHome'},  # noqa
 
-        {'trigger': 'max_defective_component', 'source': 'ReturnToHome', 'dest': 'PerformCalibration',  # noqa
-         'conditions': ['max_attempts']},
-        {'trigger': 'not_max_defective_component', 'source': 'ReturnToHome', 'dest': 'WaitOp',  # noqa
-         'unless': ['max_attempts']},
+        {'trigger': 'max_defective_parts', 'source': 'ReturnHome', 'dest': 'Calibrate',  # noqa
+         'conditions': ['max_rejections']},
+        {'trigger': 'not_max_defective_parts', 'source': 'ReturnHome', 'dest': 'Idle',  # noqa
+         'unless': ['max_rejections']},
 
-        {'trigger': 'packaged_product', 'source': 'PackageProduct', 'dest': 'Finish'},  # noqa
-        {'trigger': 'calibration_finish', 'source': 'PerformCalibration', 'dest': 'Finish'}  # noqa
+        {'trigger': 'product_boxed', 'source': 'BoxProduct', 'dest': 'Complete'},  # noqa
+        {'trigger': 'calibration_done', 'source': 'Calibrate', 'dest': 'Complete'}  # noqa
 
     ]
 
     def __init__(self):
-        self.inspected_component_flag = False
-        self.max_defective_components = 2
-        self.defective_components_count = 0
-        self.state_execution_sequence = []
+        self.part_checked_flag = False
+        self.defective_parts_limit = 2
+        self.rejected_parts_count = 0
 
         self.machine = GraphMachine(
             model=self,
-            states=AssemblyLineUnreachable.states,
-            transitions=AssemblyLineUnreachable.transitions,
-            initial='Initial', graph_engine='graphviz')
+            states=UnreachableMachine.states,
+            transitions=UnreachableMachine.transitions,
+            initial='Start', graph_engine='graphviz')
 
     def print_state(self):
-        print('Estado atual: ' + self.state + '\n')
+        print('Current state: ' + self.state + '\n')
 
-    def count_discarded_components(self):
-        self.defective_components_count += 1
+    def count_rejected_parts(self):
+        self.rejected_parts_count += 1
 
-    def is_bad_component(self):
-        return self.inspected_component_flag
+    def is_defective_part(self):
+        return self.part_checked_flag
 
-    def max_attempts(self):
-        return self.defective_components_count == self.max_defective_components
-
-    def run(self):
-        available_transitions = self.machine.get_triggers(self.state)
-        available_transitions = available_transitions[len(AssemblyLineUnreachable.states):]  # noqa
-
-        for current_transition in range(len(available_transitions)):
-            method = getattr(self, available_transitions[current_transition])
-            may_method = getattr(self, 'may_' + available_transitions[current_transition])  # noqa
-            if may_method():
-                print(f"Transição executada: {available_transitions[current_transition]}")  # noqa
-                method()
-
-        self.state_execution_sequence.append(self.state)
+    def max_rejections(self):
+        return self.rejected_parts_count == self.defective_parts_limit
