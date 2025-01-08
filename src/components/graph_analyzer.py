@@ -51,6 +51,11 @@ class GraphAnalyzer:
             'fail_msg',
             'Unreachable States Detected',
         )
+        setattr(
+            testsuite,
+            'suite_name',
+            'unreachable_states_suite',
+        )
         for state in self.graph.nodes:
             testcase_name = f'test_unreachable_{state}'
             _callable = test_unreachable(state)
@@ -107,6 +112,11 @@ class GraphAnalyzer:
             testsuite,
             'fail_msg',
             'Sink States Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'sink_states_suite',
         )
         for state in self.graph.nodes:
             testcase_name = f'test_sink_{state}'
@@ -203,6 +213,11 @@ class GraphAnalyzer:
             testsuite,
             'fail_msg',
             'Nondeterministic Transitions Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'nondeterministic_transition_suite',
         )
         for state in self.graph.nodes:
             testcase_name = f'test_nondeterministic_{state}'

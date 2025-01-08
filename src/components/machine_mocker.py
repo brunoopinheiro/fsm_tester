@@ -154,6 +154,11 @@ class MachineMocker:
             'fail_msg',
             'Unreachable States Detected in Execution',
         )
+        setattr(
+            testsuite,
+            'suite_name',
+            'unreachable_states_suite',
+        )
         for state in self.graph.nodes:
             paths = list(nx.all_simple_paths(
                 self.graph,
@@ -322,6 +327,11 @@ class MachineMocker:
             testsuite,
             'fail_msg',
             'Deadlock Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'dead_lock_suite',
         )
         for loop in loops:
             testcase_name = f'test_deadlock_{loop}'
