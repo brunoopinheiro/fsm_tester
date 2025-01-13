@@ -1,6 +1,6 @@
 import pytest  # noqa
 from machines.defective.unreachable import UnreachableMachine
-from src.fsm_tester import FSMTester
+from fsm_tester.fsm_tester import FSMTester
 
 
 @pytest.fixture
@@ -10,6 +10,7 @@ def fsm_tester():
         dialect='pytransitions',
         final_state='Complete',
         expected_loops=1,
+        save_report=True,
     )
 
 

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.entities import (
+from fsm_tester.entities import (
     FSMProtocol,
     FSMState,
     FSMTransition,

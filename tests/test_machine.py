@@ -1,6 +1,6 @@
 import pytest  # noqa
 from machines.assembly_line_impl.main import AssemblyLine
-from src.fsm_tester import FSMTester
+from fsm_tester.fsm_tester import FSMTester
 
 
 @pytest.fixture

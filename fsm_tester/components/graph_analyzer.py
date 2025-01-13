@@ -1,6 +1,6 @@
 import networkx as nx
 
-from src.entities import FSMTransition
+from fsm_tester.entities import FSMTransition
 from networkx import MultiDiGraph, MultiGraph
 from unittest import TestSuite, TestCase
 from typing import Union, List
@@ -50,6 +50,11 @@ class GraphAnalyzer:
             testsuite,
             'fail_msg',
             'Unreachable States Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'unreachable_states_suite',
         )
         for state in self.graph.nodes:
             testcase_name = f'test_unreachable_{state}'
@@ -107,6 +112,11 @@ class GraphAnalyzer:
             testsuite,
             'fail_msg',
             'Sink States Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'sink_states_suite',
         )
         for state in self.graph.nodes:
             testcase_name = f'test_sink_{state}'
@@ -203,6 +213,11 @@ class GraphAnalyzer:
             testsuite,
             'fail_msg',
             'Nondeterministic Transitions Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'nondeterministic_transition_suite',
         )
         for state in self.graph.nodes:
             testcase_name = f'test_nondeterministic_{state}'

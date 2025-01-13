@@ -1,4 +1,4 @@
-from src.adapters import BaseAdapter
+from fsm_tester.adapters import BaseAdapter
 from typing import Literal, TypeVar
 
 

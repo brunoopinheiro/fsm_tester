@@ -1,7 +1,7 @@
 import networkx as nx
 from unittest import TestSuite, TestCase
 from unittest.mock import MagicMock
-from src.typing import Adapter
+from fsm_tester.typing import Adapter
 from typing import List, Iterable
 
 
@@ -153,6 +153,11 @@ class MachineMocker:
             testsuite,
             'fail_msg',
             'Unreachable States Detected in Execution',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'unreachable_states_suite',
         )
         for state in self.graph.nodes:
             paths = list(nx.all_simple_paths(
@@ -322,6 +327,11 @@ class MachineMocker:
             testsuite,
             'fail_msg',
             'Deadlock Detected',
+        )
+        setattr(
+            testsuite,
+            'suite_name',
+            'dead_lock_suite',
         )
         for loop in loops:
             testcase_name = f'test_deadlock_{loop}'

@@ -1,7 +1,7 @@
-from src.adapters.base_adapter import BaseAdapter
-from src.adapters.transitions_adapter import TransitionsAdapter
-from src.entities import FSMProtocol
-from src.typing import DIALECTS
+from fsm_tester.adapters.base_adapter import BaseAdapter
+from fsm_tester.adapters.transitions_adapter import TransitionsAdapter
+from fsm_tester.entities import FSMProtocol
+from fsm_tester.typing import DIALECTS
 
 
 class AdapterFactory:
