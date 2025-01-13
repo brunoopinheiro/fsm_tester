@@ -10,6 +10,7 @@ def fsm_tester():
         dialect='pytransitions',
         final_state='Complete',
         expected_loops=1,
+        save_report=True,
     )
 
 

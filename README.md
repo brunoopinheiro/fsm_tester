@@ -33,8 +33,11 @@ def test_assembly_line(fsm_tester, suite):
 ```
 
 ## Installation
-!! TODO !! </br>
-The tool was already developed using Poetry to ease the package management, but the installation process is not yet automated. The tool is not yet available on PyPi, so you need to clone the repository and install the dependencies manually.
+🚧 Work In Progress 🚧 </br>
+The tool was already developed using Poetry to ease the package management, but the installation process is not yet automated. The tool is not yet available on PyPi, so you need to clone the repository and install the dependencies via poetry.
+
+You can generate a `wheel` file using `poetry build --format wheel`, and then install the tool using `pip install <path_to_wheel_file>`.
+The generated `wheel` can be found in the `dist` folder, unless you change the output folder when running the `poetry build` command.
 
 ## Supported Dialects
 Currently, the tool supports supports only the [`pytransitions`](https://github.com/pytransitions/transitions) library, but the tool is designed to be easily extensible to other libraries. If you want to add support for a new library, you can create a class that inherits from the `BaseAdapter` class and implement the methods that are necessary to convert the FSM Model to the desired library, then add this support to the `create_adapter` method in the `AdapterFactory` class.
@@ -144,3 +147,7 @@ def test_deadlock_states_suite(fsm_tester):
     fsm_tester.run(suite)
 
 ```
+
+## Additional Options
+The `FSMTester` class has some additional options that can be used to customize the test output.
+You can set the `save_report` option to `True` to save the test report in an `.html` file, and the `report_path` option to set the path where the report will be saved.

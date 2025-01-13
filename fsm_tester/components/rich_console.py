@@ -1,3 +1,4 @@
+import sys
 from rich.console import Console
 
 
@@ -11,7 +12,18 @@ class RichConsole(Console):
     """
 
     def __init__(self, *args, **kwargs):
+        self.stream = sys.stderr
         super().__init__(*args, **kwargs)
 
-    def write(self, message: str, *args, **kwargs):
-        self.print(message, *args, **kwargs)
+    def __getattr__(self, attr):
+        if attr in ('stream', '__getstate__'):
+            raise AttributeError(attr)
+        return getattr(self.stream, attr)
+
+    def write(self, arg: str, *args, **kwargs):
+        self.print(arg, *args, **kwargs)
+
+    def writeln(self, arg: str, *args, **kwargs):
+        if arg:
+            self.write(arg)
+        self.write('\n')

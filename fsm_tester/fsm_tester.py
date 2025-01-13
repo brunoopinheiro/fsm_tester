@@ -30,6 +30,8 @@ class FSMTester():
         final_state: str,
         dialect: DIALECTS = 'pytransitions',
         expected_loops: int = 0,
+        save_report: bool = False,
+        report_dir: str = 'reports',
         verbosity=2,
         *args,
         **kwargs,
@@ -42,12 +44,14 @@ class FSMTester():
         self.final_state = final_state
         self.graph = self.adapter.get_graph()
         self.console = Console(
-            record=True,
+            record=save_report,
         )
-        self.reports_path = Path('reports')
+        self.save_report = save_report
+        self.reports_path = Path(report_dir)
         self.reports_path.mkdir(exist_ok=True)
         self.test_runner = TextTestRunner(
             verbosity=verbosity,
+            stream=self.console,
         )
         self.graph_analyzer = GraphAnalyzer(
             graph=self.graph,
@@ -102,6 +106,17 @@ class FSMTester():
 
     @staticmethod
     def _report_errors(fail_msg_base: str, failure_results: list) -> str:
+        """Generates a summary of the errors found during the test run.
+
+        Args:
+            fail_msg_base (str): The base message to be displayed in the
+                summary.
+            failure_results (list): A list of the failures found during the
+                test run.
+
+        Returns:
+            str: A summary of the errors found during the test run.
+        """
         summary_info = f'[{fail_msg_base}]: '
         for failure in failure_results:
             summary_info += str(failure)
@@ -113,8 +128,19 @@ class FSMTester():
         Args:
             test_suite (TestSuite): A test suite to be run.
         """
-        install(show_locals=True)
-        self.console.print(f'Running {test_suite.suite_name}...')
+        install(
+            console=self.console,
+            show_locals=True,
+        )
+        self.console.print(
+            f'FSMTester: Running {test_suite.suite_name}...',
+            justify='center',
+            style='bold black on green',
+        )
+        self.console.print(
+            '-----------------------------------\n\n',
+            justify='center',
+        )
         suite_results = list()
         failures = list()
         for test in test_suite:
@@ -126,9 +152,9 @@ class FSMTester():
                 failures.append(test)
             suite_results.append(is_successful)
         errors_report = self._report_errors(test_suite.fail_msg, failures)
-        if not all(suite_results):
+        if not all(suite_results) and self.save_report:
             self.console.save_html(
-                f'reports/report_{test_suite.suite_name}.html',
+                f'{self.reports_path.resolve()}/report_{test_suite.suite_name}.html',  # noqa
                 theme=terminal_theme.MONOKAI,
             )
         self.console.end_capture()
