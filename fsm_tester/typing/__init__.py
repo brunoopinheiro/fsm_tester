@@ -1,4 +1,4 @@
-from src.typing.types import (
+from fsm_tester.typing.types import (
     Adapter,
     DIALECTS,
 )

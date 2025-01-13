@@ -1,5 +1,5 @@
 # https://networkx.org/documentation/stable/
-from src.adapters.base_adapter import (
+from fsm_tester.adapters.base_adapter import (
     BaseAdapter,
     FSMState,
     FSMTransition,

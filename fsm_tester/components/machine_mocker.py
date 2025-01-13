@@ -1,7 +1,7 @@
 import networkx as nx
 from unittest import TestSuite, TestCase
 from unittest.mock import MagicMock
-from src.typing import Adapter
+from fsm_tester.typing import Adapter
 from typing import List, Iterable
 
 

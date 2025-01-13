@@ -1,6 +1,6 @@
 import pytest  # noqa
 from machines.defective.deadlock import DeadlockMachine
-from src.fsm_tester import FSMTester
+from fsm_tester.fsm_tester import FSMTester
 
 
 @pytest.fixture

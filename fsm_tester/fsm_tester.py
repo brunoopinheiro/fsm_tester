@@ -4,14 +4,14 @@ from unittest.suite import TestSuite
 from pathlib import Path
 from rich import terminal_theme
 from rich.traceback import install
-from src.adapters import (
+from fsm_tester.adapters import (
     AdapterFactory,
 )
-from src.entities import FSMProtocol
-from src.components.graph_analyzer import GraphAnalyzer
-from src.components.machine_mocker import MachineMocker
-from src.components.rich_console import RichConsole as Console
-from src.typing import DIALECTS
+from fsm_tester.entities import FSMProtocol
+from fsm_tester.components.graph_analyzer import GraphAnalyzer
+from fsm_tester.components.machine_mocker import MachineMocker
+from fsm_tester.components.rich_console import RichConsole as Console
+from fsm_tester.typing import DIALECTS
 
 
 class FSMTester():

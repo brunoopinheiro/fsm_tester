@@ -1,6 +1,6 @@
 import networkx as nx
 
-from src.entities import FSMTransition
+from fsm_tester.entities import FSMTransition
 from networkx import MultiDiGraph, MultiGraph
 from unittest import TestSuite, TestCase
 from typing import Union, List

@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "fsm_testing"
+name = "fsm_tester"
 version = "0.1.0"
-description = "TODO"
+description = "FSM Tester tool that can be integrated to pytest."
 authors = ["Bruno_Pinheiro <bopj@softex.cin.ufpe.br>"]
 readme = "README.md"
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
