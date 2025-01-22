@@ -1,9 +1,10 @@
 # FSMTester
-This tool was made as part of the evaluation process for the conclusion of the post-graduation course in Robotics and Artificial Inteligence at the "Residência em Robótica e Inteligência Artificial" program at CIn-UFPE (Centro de Informática da Universidade Federal de Pernambuco).
+This tool was made as part of the evaluation process for the conclusion of the graduation course in Robotics and Artificial Inteligence at the "Residência em Robótica e Inteligência Artificial" program at CIn-UFPE (Centro de Informática da Universidade Federal de Pernambuco).
 
 The tool is a Finite State Machine (FSM) tester, which is able to receive a FSM Model that defines its states and transitions, and tests the code for the following properties:
-- Reachability
-- Determinism
+- Unreachable States
+- Sink States
+- Nondeterministic Transitions
 - Deadlocks
 
 The tool is integrated with PyTest, and can be used to test the properties of the FSM Model with just a few lines of code.
@@ -48,6 +49,9 @@ Both the `Reachability` and the `Nondeterminism` properties are static analysis 
 
 ## Testing a Machine Model with the Tool:
 To test a FSM Model with the tool, you need to create a class that represents the FSM Model, having both the states and transitions defined.
+Be aware that currently the tool only supports the `GraphMachine` class from the `pytransitions` library, so you need to define your FSM Model using this class.
+This does not change the way you define your FSM.
+The tester expects that a list of states and a list of transitions are defined at the class level.
 
 ```python
 from transitions.extensions import GraphMachine
